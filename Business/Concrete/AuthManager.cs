@@ -21,11 +21,11 @@ namespace Business.Concrete
             _tokenHelper = tokenHelper;
         }
 
-        public IDataResult<UsersKey> Register(UserForRegisterDto userForRegisterDto, string password)
+        public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
         {
             byte[] passwordHash, passwordSalt;
             HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
-            var user = new UsersKey
+            var user = new User
             {
                 Email = userForRegisterDto.Email,
                 FirstName = userForRegisterDto.FirstName,
@@ -35,23 +35,23 @@ namespace Business.Concrete
                 Status = true
             };
             _userService.Add(user);
-            return new SuccessDataResult<UsersKey>(user);
+            return new SuccessDataResult<User>(user);
         }
 
-        public IDataResult<UsersKey> Login(UserForLoginDto userForLoginDto)
+        public IDataResult<User> Login(UserForLoginDto userForLoginDto)
         {
             var userToCheck = _userService.GetByMail(userForLoginDto.Email);
             if (userToCheck == null)
             {
-                return new ErrorDataResult<UsersKey>("Kullanıcı bulunamadı");
+                return new ErrorDataResult<User>("Kullanıcı bulunamadı");
             }
 
             if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
             {
-                return new ErrorDataResult<UsersKey>("Parola hatalı");
+                return new ErrorDataResult<User>("Parola hatalı");
             }
 
-            return new SuccessDataResult<UsersKey>(userToCheck, "Başarılı giriş");
+            return new SuccessDataResult<User>(userToCheck, "Başarılı giriş");
         }
 
         public IResult UserExists(string email)
@@ -63,7 +63,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        public IDataResult<AccessToken> CreateAccessToken(UsersKey user)
+        public IDataResult<AccessToken> CreateAccessToken(User user)
         {
             var claims = _userService.GetClaims(user);
             var accessToken = _tokenHelper.CreateToken(user, claims);

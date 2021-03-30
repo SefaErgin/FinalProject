@@ -8,9 +8,9 @@ using System.Linq;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfUserDal : EfEntityRepositoryBase<UsersKey, NorthwindContext>, IUserDal
+    public class EfUserDal : EfEntityRepositoryBase<User, NorthwindContext>, IUserDal
     {
-        public List<OperationClaim> GetClaims(UsersKey user)
+        public List<OperationClaim> GetClaims(User user)
         {
             using (var context = new NorthwindContext())
             {

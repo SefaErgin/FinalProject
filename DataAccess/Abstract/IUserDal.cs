@@ -6,8 +6,8 @@ using System.Text;
 
 namespace DataAccess.Abstract
 {
-    public interface IUserDal : IEntityRepository<UsersKey>
+    public interface IUserDal : IEntityRepository<User>
     {
-        List<OperationClaim> GetClaims(UsersKey user);
+        List<OperationClaim> GetClaims(User user);
     }
 }
